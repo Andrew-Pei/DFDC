@@ -30,12 +30,12 @@ I've saved a snapshot of a version in ../data/saved_models as 'j3d_l0.1887_FOR_T
 snapshot to transfer learn from.
 """
 
-FACE_MP4_DIR = "/data1/pbw/DFDC/cnn3d/data/face_videos_by_real_fake"  # The directory containing the cropped face MP4s, in 'REAL' and 'FAKE' subdirs
+FACE_MP4_DIR = "/data1/pbw/DFDC/cnn3d/data/whole_picture_by_real_fake"  # The directory containing the cropped face MP4s, in 'REAL' and 'FAKE' subdirs
 #BATCH_SIZE = 12
 BATCH_SIZE = 4
 N_WORKERS = 8
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
-device_ids = [0,1]
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+device_ids = [2]
 DEVICE = "cuda"
 EPOCHS = 20
 
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     #model = model.cuda()
     #model = model.cuda(device_ids[0])
     #model = torch.nn.DataParallel(model, device_ids=device_ids)
-    model.load_state_dict(torch.load("/data1/pbw/DFDC/cnn3d/saved_models/j3d_e9_l0.2359.model"))
+    #model.load_state_dict(torch.load("/data1/pbw/DFDC/cnn3d/saved_models/j3d_e19_l0.1546.model"))
 
     criterion = torch.nn.CrossEntropyLoss()
     lr = 1e-3

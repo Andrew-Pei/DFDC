@@ -3,6 +3,11 @@ import pickle
 import skvideo.io
 import multiprocessing
 
+import sys
+sys.path.append("/data1/pbw/DFDC")
+
+import pdb
+
 from tqdm import tqdm
 from glob import glob
 from cnn3d.export.export_utils import get_roi_for_each_face, load_video
@@ -24,16 +29,17 @@ One nice thing about this method, even ignoring the video aspect, is it greatly 
 because the 'face' had to be present for a long period of time of the video to count as a face.
 """
 
-VIDEO_ROOT = "E:\\DFDC\\data"  # This is the DFDC source video root, ie this folder should contain dfdc_train_part_0, dfdc_train_part_1 etc.
-OUTPUT_MP4_DIR = "../../data/face_videos_by_part"  # Where we save our new MP4s
-BOX_PICKLE_DIR = "../../data/rois"  # Where the pickle are kept containing the ROIs for the faces
+VIDEO_ROOT = "/data1/pbw/DFDC/cnn3d/data/discrete_5/"  # This is the DFDC source video root, ie this folder should contain dfdc_train_part_0, dfdc_train_part_1 etc.
+#print(os.listdir(VIDEO_ROOT))
+OUTPUT_MP4_DIR = "/data1/pbw/DFDC/cnn3d/data/discrete_5_export/by_part"  # Where we save our new MP4s
+BOX_PICKLE_DIR = "/data1/pbw/DFDC/cnn3d/data/discrete_5_rois"  # Where the pickle are kept containing the ROIs for the faces
 
 MAX_FRAMES_TO_LOAD = 300  # Videos in DFDC were rarely longer than 300 frames, and if they were we bin the rest
 FACE_FRAMES = 10   # This must match what was used when the pickles were extracted in the previous script
 FACEDETECTION_DOWNSAMPLE = 0.5  # Downsampling before MTCNN speeds things up
 OUTPUT_FACE_SIZE = (256, 256)  # Output resolution of our videos
 
-FRAME_CLUMP_SIZE_FRAMES = 150  # Start afresh every 150 frames so we can have a smaller ROI and therefore a bigger face
+FRAME_CLUMP_SIZE_FRAMES = 60  # Start afresh every 150 frames so we can have a smaller ROI and therefore a bigger face
 FRAME_CLUMP_SIZE_BOXES = FRAME_CLUMP_SIZE_FRAMES // FACE_FRAMES
 
 if FACEDETECTION_DOWNSAMPLE:
@@ -83,7 +89,7 @@ def export_chunks_for_video(params):
 if __name__ == "__main__":
     box_pickles = sorted(glob(os.path.join(BOX_PICKLE_DIR, "*.pickle")))
 
-    N_WORKERS = multiprocessing.cpu_count()
+    N_WORKERS = int(multiprocessing.cpu_count()*0.3)
 
     for i_pickle, box_pickle_path in enumerate(box_pickles):
         print(f"Pickle {box_pickle_path} ({i_pickle} of {len(box_pickles)})")

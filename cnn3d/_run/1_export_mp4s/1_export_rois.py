@@ -3,7 +3,8 @@ import pickle
 from glob import glob
 from tqdm import tqdm
 from facenet_pytorch import MTCNN
-
+import sys
+sys.path.append("/data1/pbw/DFDC")
 from cnn3d.export.export_utils import load_video
 
 """
@@ -55,8 +56,9 @@ These pickle files will then be used the the next file, '2_export_mp4s.py'
 """
 
 # Data
-OUT_DIR = "../../data/rois"
-MP4_ROOT = "E:\\DFDC\\data\\dfdc_train_part_*"
+OUT_DIR = "/data1/pbw/DFDC/cnn3d/data/discrete_5_rois"
+#MP4_ROOT = "/data1/pbw/dfdc_dataset/video/train/dfdc_train_part_*"
+MP4_ROOT = "/data1/pbw/DFDC/cnn3d/data/discrete_5/dfdc_train_part_*"
 
 # Face detection
 MAX_FRAMES_TO_LOAD = 300
@@ -70,6 +72,7 @@ mp4_dirs = sorted(glob(MP4_ROOT))
 mp4_dirs_exported = [os.path.basename(d).split('_',1)[1].rsplit('_',1)[0] for d in glob(os.path.join(OUT_DIR, "*"))]
 mp4_dirs_unexported = [d for d in mp4_dirs if os.path.basename(d) not in mp4_dirs_exported]
 
+#mp4_dirs_unexported=mp4_dirs_unexported[-5:]
 print(f"Found {len(mp4_dirs)} MP4 dirs; {len(mp4_dirs_unexported)} needing export")
 keep_all = True if MAX_FACES > 1 else False
 
@@ -78,7 +81,7 @@ if FACEDETECTION_DOWNSAMPLE:
 else:
     facedetection_upsample = 1
 
-mtcnn = MTCNN(margin=0, keep_all=keep_all, post_process=False, device='cuda:0',
+mtcnn = MTCNN(margin=0, keep_all=keep_all, post_process=False, device='cuda:2',
               thresholds=MTCNN_THRESHOLDS, factor=MMTNN_FACTOR)
 
 
